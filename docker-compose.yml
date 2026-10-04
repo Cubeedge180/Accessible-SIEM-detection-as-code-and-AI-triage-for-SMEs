@@ -1,0 +1,31 @@
+# Server-side stack. Start with: docker compose up -d
+# Add the local LLM with:        docker compose --profile llm up -d
+name: siem
+
+services:
+  ingest:
+    build:
+      context: .
+      dockerfile: ingest/Dockerfile
+    ports:
+      - "${INGEST_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  # Local LLM for alert triage. Opt-in because the model download is large.
+  # Bound to localhost so the model is never exposed beyond the SIEM host.
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["llm"]
+    ports:
+      - "127.0.0.1:${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  ollama-data:

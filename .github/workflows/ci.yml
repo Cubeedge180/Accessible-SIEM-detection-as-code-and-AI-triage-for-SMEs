@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  # Pin the ATT&CK version rule tags are validated against, so results are reproducible.
+  ATTACK_VERSION: "19.2"
+  ATTACK_DATA_BASE: https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: Ruff
+        run: ruff check . && ruff format --check .
+      - name: YAML lint
+        run: yamllint .
+      - name: Sigma rule validation
+        env:
+          SIGMA_ATTACK_DATA: ${{ env.ATTACK_DATA_BASE }}/enterprise-attack-${{ env.ATTACK_VERSION }}.json
+        run: python -m detect.lint
+      - name: Compose file validation
+        run: docker compose config --quiet
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: Rule and unit tests
+        run: pytest -v
