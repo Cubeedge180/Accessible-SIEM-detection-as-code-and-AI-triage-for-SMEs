@@ -1,0 +1,12 @@
+[
+  {
+    "Channel": "Security",
+    "Provider_Name": "Microsoft-Windows-Eventlog",
+    "EventID": 1102,
+    "Computer": "WIN-LAB01.lab.local",
+    "TimeCreated": "2026-10-04T12:00:00.000Z",
+    "SubjectUserName": "labadmin",
+    "SubjectDomainName": "LAB",
+    "SubjectLogonId": "0x3e7"
+  }
+]

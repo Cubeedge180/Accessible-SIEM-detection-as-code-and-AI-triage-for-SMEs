@@ -1,0 +1,28 @@
+[
+  {
+    "_comment": "Event log service shutdown: same provider, different event",
+    "Channel": "Security",
+    "Provider_Name": "Microsoft-Windows-Eventlog",
+    "EventID": 1100,
+    "Computer": "WIN-LAB01.lab.local",
+    "TimeCreated": "2026-10-04T12:05:00.000Z"
+  },
+  {
+    "_comment": "Same event id from an unrelated provider",
+    "Channel": "Application",
+    "Provider_Name": "SomeVendorAgent",
+    "EventID": 1102,
+    "Computer": "WIN-LAB01.lab.local",
+    "TimeCreated": "2026-10-04T12:06:00.000Z"
+  },
+  {
+    "_comment": "Ordinary successful logon",
+    "Channel": "Security",
+    "Provider_Name": "Microsoft-Windows-Security-Auditing",
+    "EventID": 4624,
+    "Computer": "WIN-LAB01.lab.local",
+    "TimeCreated": "2026-10-04T12:07:00.000Z",
+    "TargetUserName": "labuser",
+    "LogonType": 2
+  }
+]
