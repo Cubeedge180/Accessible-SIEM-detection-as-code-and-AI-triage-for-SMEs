@@ -8,6 +8,11 @@ on:
 permissions:
   contents: read
 
+env:
+  # Pin the ATT&CK version rule tags are validated against, so results are reproducible.
+  ATTACK_VERSION: "19.2"
+  ATTACK_DATA_BASE: https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -24,6 +29,8 @@ jobs:
       - name: YAML lint
         run: yamllint .
       - name: Sigma rule validation
+        env:
+          SIGMA_ATTACK_DATA: ${{ env.ATTACK_DATA_BASE }}/enterprise-attack-${{ env.ATTACK_VERSION }}.json
         run: python -m detect.lint
       - name: Compose file validation
         run: docker compose config --quiet

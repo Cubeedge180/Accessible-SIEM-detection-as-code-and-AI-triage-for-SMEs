@@ -4,8 +4,9 @@ Usage: python -m detect.lint [rules_dir]
 Exits non-zero if any rule fails to parse or any validator reports an issue.
 
 The ATT&CK tag validator downloads MITRE's ATT&CK data from GitHub. Set
-SIGMA_LINT_OFFLINE=1 to skip it when working without network access; CI always
-runs it.
+SIGMA_ATTACK_DATA to a URL or local path of an enterprise-attack STIX file to
+pin the ATT&CK version (CI does), or SIGMA_LINT_OFFLINE=1 to skip the check
+when working without network access.
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ import sys
 from pathlib import Path
 
 from sigma.collection import SigmaCollection
+from sigma.data import mitre_attack
 from sigma.validation import SigmaValidator
 from sigma.validators.core import validators
 
@@ -43,6 +45,9 @@ def main(argv: list[str]) -> int:
     problems = [f"{e.source}: {e}" for e in collection.errors]
     for rule in collection.rules:
         problems += [f"{e.source}: {e}" for e in rule.errors]
+
+    if os.environ.get("SIGMA_ATTACK_DATA"):
+        mitre_attack.set_url(os.environ["SIGMA_ATTACK_DATA"])
 
     skipped = SKIPPED | (SKIPPED_OFFLINE if os.environ.get("SIGMA_LINT_OFFLINE") else set())
     validator = SigmaValidator(v for name, v in validators.items() if name not in skipped)

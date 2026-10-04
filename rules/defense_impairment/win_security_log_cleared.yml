@@ -6,12 +6,12 @@ description: >-
   clear logs to remove evidence of their activity; legitimate clearing is rare
   outside of planned maintenance.
 references:
-  - https://attack.mitre.org/techniques/T1070/001/
+  - https://attack.mitre.org/techniques/T1685/005/
 author: Lucian
 date: 2026-10-04
 tags:
-  - attack.defense-evasion
-  - attack.t1070.001
+  - attack.defense-impairment
+  - attack.t1685.005
 logsource:
   product: windows
   service: security
