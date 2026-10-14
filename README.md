@@ -1,7 +1,7 @@
-# Accessible SIEM: detection-as-code and AI triage for SMEs
+# Accessible SIEM: detection-as-code and local AI triage
 
-A lightweight SIEM for small and medium-sized enterprises that cannot afford
-Splunk-class tools and have no dedicated SOC.
+A lightweight SIEM for organisations that cannot afford Splunk-class tools and
+have no dedicated SOC.
 
 - **Easy to install:** one agent per host, one `docker compose up` for the server.
 - **Detection as code:** Sigma rules versioned in Git, each with positive and
@@ -11,7 +11,7 @@ Splunk-class tools and have no dedicated SOC.
 - **Human in the loop:** response actions (block IP, disable account) are only
   proposed; nothing runs without explicit approval.
 
-The project is also the practical part of a bachelor thesis, so every
+The project is also the practical part of a bachelor thesis, *Feasibility of an Open-Source SIEM: A Comparative Study with Wazuh and Local LLM Triage*, so every
 experiment is recorded and reproducible, and results are compared against a
 Wazuh baseline.
 
@@ -24,7 +24,7 @@ Wazuh baseline.
 The [research design](docs/thesis/research-design.md) fixes the questions,
 thresholds and analysis before any final measurement:
 
-- **RQ1, feasibility:** can an SME without a SOC run this system? Answered with
+- **RQ1, feasibility:** can an organisation without a dedicated SOC run this system? Answered with
   a scorecard of criteria (install effort, hardware, detection, noise, speed,
   privacy, cost), each with a pass threshold, compared against Wazuh.
 - **RQ2, grounding:** do alerts normalised to one text form, and

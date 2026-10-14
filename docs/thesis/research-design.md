@@ -1,5 +1,7 @@
 # Research design and pre-registration
 
+Thesis title: **Feasibility of an Open-Source SIEM: A Comparative Study with Wazuh and Local LLM Triage**
+
 Status: **draft**. This file is frozen with the git tag `prereg-v1` before the
 final measurement runs (planned April 2027). After that tag, any change is
 added as a dated amendment at the end, never edited in place, so it is clear
@@ -7,7 +9,7 @@ which thresholds and tests were fixed before the results were known.
 
 ## 1. Research questions
 
-**RQ1 (feasibility).** Can an SME without a SOC run an open-source SIEM with
+**RQ1 (feasibility).** Can an organisation without a dedicated SOC run an open-source SIEM with
 local LLM triage that meets fixed thresholds for install effort, hardware,
 detection, noise, speed, privacy and cost, and how does it compare with Wazuh
 on the same lab runs?
@@ -132,7 +134,7 @@ over-reliance).
 
 ## 6. Known limitations (stated in advance)
 
-- Attacks are simulated in a lab, not observed in a real SME.
+- Attacks are simulated in a lab, not observed in a real organisation.
 - The alert set is small (about 80), so small effects may not be detectable.
 - One model is tested; results may not hold for others.
 - The author writes the rules, the playbooks and the reference labels.
