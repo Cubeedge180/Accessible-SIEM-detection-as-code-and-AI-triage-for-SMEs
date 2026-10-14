@@ -1,0 +1,43 @@
+technique: T1685.005
+title: Windows event log cleared
+attack_version: "19.2"
+indicators:
+  - Security event 1102 or System event 104 on a host
+  - The clearing account is not a known administrator, or acts outside a maintenance window
+  - Suspicious activity on the same host shortly before the clear
+false_positive_hints:
+  - Planned log rotation or maintenance by an administrator
+  - Re-imaging or decommissioning of the host
+steps:
+  - id: T1685.005-1
+    phase: investigate
+    action: >-
+      Identify the account that cleared the log (SubjectUserName, SubjectDomainName)
+      and check with the IT owner whether the clear was planned.
+    destructive: false
+  - id: T1685.005-2
+    phase: investigate
+    action: >-
+      Review events the SIEM already collected from the same host in the hour before
+      the clear (logons, new processes, new services) for the activity that was hidden.
+    destructive: false
+  - id: T1685.005-3
+    phase: contain
+    action: If the clear was not authorised, disable the account that cleared the log.
+    destructive: true
+    requires_approval: true
+    response_action: disable_account
+  - id: T1685.005-4
+    phase: contain
+    action: >-
+      If the earlier activity shows compromise, isolate the host from the network
+      until it has been investigated.
+    destructive: true
+    requires_approval: true
+    response_action: isolate_host
+  - id: T1685.005-5
+    phase: recover
+    action: >-
+      Increase the Security log size and forward logs in near real time so a later
+      clear removes less evidence.
+    destructive: false

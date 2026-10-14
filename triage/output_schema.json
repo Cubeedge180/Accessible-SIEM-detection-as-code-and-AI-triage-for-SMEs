@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "triage-output.schema.json",
+  "title": "LLM triage output for one alert",
+  "description": "The model must answer in this shape (Ollama structured output). Cited fields and step ids make grounding partly checkable by triage.validate_output.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["alert_id", "explanation", "severity", "assessment", "cited_fields", "steps", "proposed_action"],
+  "properties": {
+    "alert_id": {"type": "string"},
+    "explanation": {"type": "string", "minLength": 10, "maxLength": 1500},
+    "severity": {"enum": ["low", "medium", "high", "critical"]},
+    "assessment": {"enum": ["likely_true_positive", "likely_false_positive", "uncertain"]},
+    "cited_fields": {
+      "description": "Event field names the explanation relies on, exactly as they appear in the alert.",
+      "type": "array", "items": {"type": "string"}
+    },
+    "steps": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["action", "playbook_step_id"],
+        "properties": {
+          "action": {"type": "string", "minLength": 3},
+          "playbook_step_id": {
+            "description": "Id of the playbook step this follows, or null when no playbook was given.",
+            "type": ["string", "null"]
+          }
+        }
+      }
+    },
+    "proposed_action": {
+      "description": "At most one SOAR-lite action to queue for human approval, or null.",
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["response_action", "playbook_step_id"],
+          "properties": {
+            "response_action": {"enum": ["block_ip", "disable_account", "isolate_host", "kill_process"]},
+            "playbook_step_id": {"type": ["string", "null"]}
+          }
+        }
+      ]
+    }
+  }
+}
