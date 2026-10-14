@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "playbook.schema.json",
+  "title": "Remediation playbook for one ATT&CK technique",
+  "description": "Machine-structured playbook given to the triage LLM in conditions C2 and C4 (docs/thesis/research-design.md). Short, labelled fields after Nyman (Halmstad 2026).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["technique", "title", "attack_version", "indicators", "steps"],
+  "properties": {
+    "technique": {"type": "string", "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$"},
+    "title": {"type": "string", "minLength": 3},
+    "attack_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
+    "indicators": {
+      "description": "What a true positive usually looks like in the logs.",
+      "type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3}
+    },
+    "false_positive_hints": {
+      "description": "Benign causes the analyst should rule out first.",
+      "type": "array", "items": {"type": "string", "minLength": 3}
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "phase", "action", "destructive"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^T[0-9]{4}(\\.[0-9]{3})?-[0-9]+$"},
+          "phase": {"enum": ["investigate", "contain", "eradicate", "recover"]},
+          "action": {"type": "string", "minLength": 3},
+          "destructive": {
+            "description": "True if the step changes the system or blocks a user (not just reads).",
+            "type": "boolean"
+          },
+          "requires_approval": {"type": "boolean"},
+          "response_action": {
+            "description": "SOAR-lite action the system can run for this step, only after human approval.",
+            "enum": ["block_ip", "disable_account", "isolate_host", "kill_process"]
+          }
+        }
+      }
+    }
+  }
+}

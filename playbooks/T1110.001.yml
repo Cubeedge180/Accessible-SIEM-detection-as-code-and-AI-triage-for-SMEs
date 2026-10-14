@@ -1,0 +1,41 @@
+technique: T1110.001
+title: Password guessing (brute force) against SSH or RDP
+attack_version: "19.2"
+indicators:
+  - Many failed logins from one source IP within minutes
+  - Failures target one account or a short list of common account names
+  - A successful login from the same source IP after the failures
+false_positive_hints:
+  - A user or script with a stale saved password
+  - An internal vulnerability scanner run by IT
+steps:
+  - id: T1110.001-1
+    phase: investigate
+    action: >-
+      Check whether any login from the source IP succeeded after the failed
+      attempts, and on which account.
+    destructive: false
+  - id: T1110.001-2
+    phase: investigate
+    action: Check whether the source IP is internal, a known scanner, or external.
+    destructive: false
+  - id: T1110.001-3
+    phase: contain
+    action: Block the source IP at the host or perimeter firewall.
+    destructive: true
+    requires_approval: true
+    response_action: block_ip
+  - id: T1110.001-4
+    phase: contain
+    action: >-
+      If a login succeeded, disable the affected account and reset its password
+      after checking the session's activity.
+    destructive: true
+    requires_approval: true
+    response_action: disable_account
+  - id: T1110.001-5
+    phase: recover
+    action: >-
+      Turn off password login for SSH (keys only) or put RDP behind a VPN, and
+      enable account lockout.
+    destructive: false
